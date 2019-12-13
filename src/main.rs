@@ -23,8 +23,8 @@ impl Network {
             neurons.push(Neuron::new(n));
         }
         Network {
-            n: n,
-            neurons: neurons,
+            n,
+            neurons,
             count: 0,
         }
     }
@@ -65,8 +65,8 @@ impl Neuron {
             }
         }
         Neuron {
-            synapses: synapses,
-            weights: weights,
+            synapses,
+            weights,
             v: 0.0,
             i_ext: 0.0,
             threshold: 10.0,
