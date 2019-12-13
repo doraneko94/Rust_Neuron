@@ -29,7 +29,7 @@ impl Network {
         }
     }
 
-    fn run(&mut self, spike_train: &Vec<Vec<u8>>, dt: f64) -> Vec<u8> {
+    fn run(&mut self, spike_train: &[Vec<u8>], dt: f64) -> Vec<u8> {
         let mut spike: Vec<u8> = vec![0; self.n];
         for i in 0..self.n {
             spike[i] = self.neurons[i].run(&spike_train[self.count], dt);
@@ -74,7 +74,7 @@ impl Neuron {
         }
     }
 
-    fn run(&mut self, spike: &Vec<u8>, dt: f64) -> u8 {
+    fn run(&mut self, spike: &[u8], dt: f64) -> u8 {
         if self.t_rest > 0.0 {
             self.t_rest -= dt;
             if self.t_rest <= 0.0 {
