@@ -1,9 +1,9 @@
-mod neuron;
 mod network;
+mod neuron;
 use gnuplot::AxesCommon;
 use gnuplot::*;
-use rand::random;
 use network::Network;
+use rand::random;
 
 fn main() {
     const N: usize = 100;
@@ -22,8 +22,10 @@ fn main() {
     let mut y: Vec<f64> = Vec::new();
     // y.push(0.0);
 
-    while t <= 4000.0 { // 800.0
-        if (t >= 1000.0) & (t <= 3000.0) { // 200, 600
+    while t <= 4000.0 {
+        // 800.0
+        if (t >= 1000.0) & (t <= 3000.0) {
+            // 200, 600
             network.input(5.0);
         } else {
             network.input(4.0);
