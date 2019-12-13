@@ -1,5 +1,3 @@
-extern crate gnuplot;
-extern crate rand;
 use gnuplot::AxesCommon;
 use gnuplot::*;
 use rand::random;
