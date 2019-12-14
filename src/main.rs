@@ -36,10 +36,10 @@ fn main() {
         // y.push(network.neurons[0].v);
         println!("{}", t);
     }
-    let time_all = spike_train.len();
-    for i in 0..time_all {
-        for j in 0..N {
-            if spike_train[i][j] == 1 {
+
+    for (i, spike) in spike_train.iter().enumerate() {
+        for (j, s) in spike.iter().enumerate() {
+            if *s == 1 {
                 x.push(i as f64 * dt);
                 y.push(j as f64);
             }
@@ -47,8 +47,8 @@ fn main() {
     }
 
     let mut y: Vec<f64> = Vec::with_capacity(spike_train.len());
-    for i in 0..spike_train.len() {
-        y.push(spike_train[i][0] as f64)
+    for spike in spike_train {
+        y.push(spike[0] as f64)
     }
 
     let mut fg = gnuplot::Figure::new();

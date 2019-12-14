@@ -21,8 +21,8 @@ impl Network {
 
     pub fn run(&mut self, spike_train: &[Vec<u8>], dt: f64) -> Vec<u8> {
         let mut spike: Vec<u8> = vec![0; self.n];
-        for i in 0..self.n {
-            spike[i] = self.neurons[i].run(&spike_train[self.count], dt);
+        for (i, neuron) in self.neurons.iter_mut().enumerate() {
+            spike[i] = neuron.run(&spike_train[self.count], dt);
         }
         self.count += 1;
         spike

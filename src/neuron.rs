@@ -38,8 +38,8 @@ impl Neuron {
             1
         } else {
             let mut i_rec = 0.0;
-            for i in 0..self.synapses.len() {
-                if spike[self.synapses[i]] == 1 {
+            for (i, synapse) in self.synapses.iter().enumerate() {
+                if spike[*synapse] == 1 {
                     i_rec += self.weights[i];
                 }
             }
