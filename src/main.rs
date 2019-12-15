@@ -7,6 +7,10 @@ use rand::random;
 
 fn main() {
     const N: usize = 100;
+    const START_TIME: f64 = 0.;
+    const END_TIME: f64 = 4000.; //800.
+    const T1: f64 = 1000.; // 200.
+    const T2: f64 = 3000.; // 600.
     let mut spike_train: Vec<Vec<u8>> = vec![Vec::new()];
     for _ in 0..N {
         if random::<f64>() < 0.5 {
@@ -16,16 +20,14 @@ fn main() {
         }
     }
     let mut network: Network = Network::new(N);
-    let mut t = 0.0;
+    let mut t = START_TIME;
     let dt = 0.1;
     let mut x: Vec<f64> = Vec::new();
     let mut y: Vec<f64> = Vec::new();
     // y.push(0.0);
 
-    while t <= 4000.0 {
-        // 800.0
-        if (t >= 1000.0) & (t <= 3000.0) {
-            // 200, 600
+    while t <= END_TIME {
+        if T1 <= t && t <= T2 {
             network.input(5.0);
         } else {
             network.input(4.0);
@@ -46,15 +48,15 @@ fn main() {
         }
     }
 
-    let mut y: Vec<f64> = Vec::with_capacity(spike_train.len());
-    for spike in spike_train {
-        y.push(spike[0] as f64)
-    }
+    //let mut y: Vec<f64> = Vec::with_capacity(spike_train.len());
+    //for spike in spike_train {
+    //    y.push(spike[0] as f64)
+    //}
 
     let mut fg = gnuplot::Figure::new();
     fg.axes2d()
-        .lines(x.iter(), y.iter(), &[gnuplot::Color("blue")])
+        .points(x.iter(), y.iter(), &[gnuplot::Color("blue")])
         //.lines(x.iter(), y.iter(), &[gnuplot::Color("blue")])
-        .set_x_range(Fix(0.0), Fix(4000.0)); // 0.0, 800.0
+        .set_x_range(Fix(START_TIME), Fix(END_TIME));
     fg.echo_to_file("spike_train.plt"); // voltage.plt
 }
