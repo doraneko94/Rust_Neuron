@@ -56,5 +56,5 @@ fn main() {
         .points(x.iter(), y.iter(), &[gnuplot::Color("blue")])
         //.lines(x.iter(), y.iter(), &[gnuplot::Color("blue")])
         .set_x_range(Fix(START_TIME), Fix(END_TIME));
-    fg.echo_to_file("spike_train.plt"); // voltage.plt
+    fg.save_to_png("spike_train.png", 1024, 768).unwrap(); // voltage.plt
 }
