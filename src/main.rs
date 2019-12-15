@@ -20,22 +20,20 @@ fn main() {
         }
     }
     let mut network: Network = Network::new(N);
-    let mut t = START_TIME;
     let dt = 0.1;
+    let step = ((END_TIME - START_TIME) / dt) as usize;
     let mut x: Vec<f64> = Vec::new();
     let mut y: Vec<f64> = Vec::new();
-    // y.push(0.0);
 
-    while t <= END_TIME {
+    println!("{}", step);
+    for s in 0..=step {
+        let t = START_TIME + (s as f64) * dt;
         if T1 <= t && t <= T2 {
             network.input(5.0);
         } else {
             network.input(4.0);
         }
         spike_train.push(network.run(&spike_train, dt));
-        t += dt;
-        // x.push(t);
-        // y.push(network.neurons[0].v);
         println!("{}", t);
     }
 
