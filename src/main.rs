@@ -3,7 +3,7 @@ mod neuron;
 use gnuplot::AxesCommon;
 use gnuplot::*;
 use network::Network;
-use rand::random;
+use rand::distributions::{Bernoulli, Distribution};
 
 fn main() {
     const N: usize = 100;
@@ -12,12 +12,13 @@ fn main() {
     const T1: f64 = 1000.; // 200.
     const T2: f64 = 3000.; // 600.
     let mut spike_train: Vec<Vec<u8>> = vec![Vec::new()];
+    let dist = Bernoulli::new(0.5).unwrap();
     for _ in 0..N {
-        if random::<f64>() < 0.5 {
-            spike_train[0].push(1);
+        spike_train[0].push(if dist.sample(&mut rand::thread_rng()) {
+            1
         } else {
-            spike_train[0].push(0);
-        }
+            0
+        });
     }
     let mut network: Network = Network::new(N);
     let dt = 0.1;

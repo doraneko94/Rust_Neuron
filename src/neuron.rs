@@ -1,4 +1,4 @@
-use rand::random;
+use rand::distributions::{Bernoulli, Distribution, Uniform};
 
 pub struct Neuron {
     synapses: Vec<usize>,
@@ -13,10 +13,12 @@ impl Neuron {
     pub fn new(n: usize) -> Neuron {
         let mut synapses: Vec<usize> = Vec::new();
         let mut weights: Vec<f64> = Vec::new();
+        let bd = Bernoulli::new(0.5).unwrap();
+        let ud = Uniform::new(0.0, 10.0);
         for i in 0..n {
-            if random::<f64>() < 0.5 {
+            if bd.sample(&mut rand::thread_rng()) {
                 synapses.push(i);
-                weights.push(random::<f64>() * 10.0);
+                weights.push(ud.sample(&mut rand::thread_rng()));
             }
         }
         Neuron {
@@ -37,13 +39,14 @@ impl Neuron {
             }
             1
         } else {
+            let dist = Uniform::new(0.0, 1.0);
             let mut i_rec = 0.0;
             for (i, synapse) in self.synapses.iter().enumerate() {
                 if spike[*synapse] == 1 {
                     i_rec += self.weights[i];
                 }
             }
-            let i_ext = self.i_ext * (1.0 + self.i_ext * random::<f64>());
+            let i_ext = self.i_ext * (1.0 + self.i_ext * dist.sample(&mut rand::thread_rng()));
             let d_v = |y: f64| (-y + 1.0 * (i_rec + i_ext)) / 50.0;
             self.v += rk4(d_v, self.v, dt);
             if self.v > self.threshold {
