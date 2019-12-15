@@ -17,6 +17,8 @@ impl Network {
         use rayon::prelude::*;
         let count = self.count;
         self.count += 1;
+        // rayon は作業の割当を work stealing で行うため
+        // neuron が多い場合には自動で負荷のバランスが取れる
         self.neurons
             .par_iter_mut()
             .map(|neuron| neuron.run(&spike_train[count], dt))
