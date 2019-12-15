@@ -15,13 +15,13 @@ impl Network {
 
     pub fn run(&mut self, spike_train: &[Vec<u8>], dt: f64) -> Vec<u8> {
         use rayon::prelude::*;
-        let count = self.count;
+        let old_spike = &spike_train[self.count];
         self.count += 1;
         // rayon は作業の割当を work stealing で行うため
         // neuron が多い場合には自動で負荷のバランスが取れる
         self.neurons
             .par_iter_mut()
-            .map(|neuron| neuron.run(&spike_train[count], dt))
+            .map(|neuron| neuron.run(old_spike, dt))
             .collect()
     }
 
