@@ -20,10 +20,11 @@ impl Network {
     }
 
     pub fn run(&mut self, spike_train: &[Vec<u8>], dt: f64) -> Vec<u8> {
+        use rayon::prelude::*;
         let count = self.count;
         self.count += 1;
         self.neurons
-            .iter_mut()
+            .par_iter_mut()
             .map(|neuron| neuron.run(&spike_train[count], dt))
             .collect()
     }
