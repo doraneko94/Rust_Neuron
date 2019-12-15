@@ -7,11 +7,10 @@ pub struct Network {
 
 impl Network {
     pub fn new(n: usize) -> Network {
-        let mut neurons: Vec<Neuron> = Vec::with_capacity(n);
-        for _ in 0..n {
-            neurons.push(Neuron::new(n));
+        Network {
+            neurons: (0..n).map(|_| Neuron::new(n)).collect(),
+            count: 0,
         }
-        Network { neurons, count: 0 }
     }
 
     pub fn run(&mut self, spike_train: &[Vec<u8>], dt: f64) -> Vec<u8> {

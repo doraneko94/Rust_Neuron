@@ -10,14 +10,18 @@ pub struct Neuron {
 
 impl Neuron {
     pub fn new(n: usize) -> Neuron {
-        let mut synapses: Vec<(usize, f64)> = Vec::new();
         let bd = Bernoulli::new(0.5).unwrap();
         let ud = Uniform::new(0.0, 10.0);
-        for i in 0..n {
-            if bd.sample(&mut rand::thread_rng()) {
-                synapses.push((i, ud.sample(&mut rand::thread_rng())));
-            }
-        }
+        let synapses = (0..n)
+            .filter_map(|i| {
+                if bd.sample(&mut rand::thread_rng()) {
+                    let weight = ud.sample(&mut rand::thread_rng());
+                    Some((i, weight))
+                } else {
+                    None
+                }
+            })
+            .collect();
         Neuron {
             synapses,
             v: 0.0,
