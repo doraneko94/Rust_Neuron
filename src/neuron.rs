@@ -39,12 +39,7 @@ impl Neuron {
             }
             1
         } else {
-            let i_rec = self
-                .synapses
-                .iter()
-                .filter(|(i, _)| spike[*i] == 1)
-                .map(|(_, w)| w)
-                .sum::<f64>();
+            let i_rec = sum_rec(&self.synapses, spike);
             let noise = Uniform::new(0.0, 1.0).sample(&mut rand::thread_rng());
             let i_ext = self.i_ext * (1.0 + self.i_ext * noise);
             let d_v = |y: f64| (-y + 1.0 * (i_rec + i_ext)) / 50.0;
@@ -61,6 +56,14 @@ impl Neuron {
     pub fn set_ext(&mut self, current: f64) {
         self.i_ext = current;
     }
+}
+
+fn sum_rec(synapses: &[(usize, f64)], spike: &[u8]) -> f64 {
+    synapses
+        .iter()
+        .filter(|(i, _)| spike[*i] == 1)
+        .map(|(_, w)| w)
+        .sum()
 }
 
 fn rk4<F: Fn(f64) -> f64>(f: F, y: f64, h: f64) -> f64 {
