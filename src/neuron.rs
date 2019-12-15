@@ -40,12 +40,12 @@ impl Neuron {
             1
         } else {
             let dist = Uniform::new(0.0, 1.0);
-            let mut i_rec = 0.0;
-            for synapse in self.synapses.iter() {
-                if spike[synapse.0] == 1 {
-                    i_rec += synapse.1;
-                }
-            }
+            let i_rec = self
+                .synapses
+                .iter()
+                .filter(|(i, _)| spike[*i] == 1)
+                .map(|(_, w)| w)
+                .sum::<f64>();
             let i_ext = self.i_ext * (1.0 + self.i_ext * dist.sample(&mut rand::thread_rng()));
             let d_v = |y: f64| (-y + 1.0 * (i_rec + i_ext)) / 50.0;
             self.v += rk4(d_v, self.v, dt);
