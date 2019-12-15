@@ -31,6 +31,14 @@ impl Neuron {
         }
     }
 
+    fn calc_dv(&self, spike: &[u8], dt: f64) -> f64 {
+        let i_rec = sum_rec(&self.synapses, spike);
+        let noise = Uniform::new(0.0, 1.0).sample(&mut rand::thread_rng());
+        let i_ext = self.i_ext * (1.0 + self.i_ext * noise);
+        let d_v = |y: f64| (-y + 1.0 * (i_rec + i_ext)) / 50.0;
+        rk4(d_v, self.v, dt)
+    }
+
     pub fn run(&mut self, spike: &[u8], dt: f64) -> u8 {
         if self.t_rest > 0.0 {
             self.t_rest -= dt;
@@ -39,11 +47,7 @@ impl Neuron {
             }
             1
         } else {
-            let i_rec = sum_rec(&self.synapses, spike);
-            let noise = Uniform::new(0.0, 1.0).sample(&mut rand::thread_rng());
-            let i_ext = self.i_ext * (1.0 + self.i_ext * noise);
-            let d_v = |y: f64| (-y + 1.0 * (i_rec + i_ext)) / 50.0;
-            self.v += rk4(d_v, self.v, dt);
+            self.v += self.calc_dv(spike, dt);
             if self.v > self.threshold {
                 self.t_rest = 2.0;
                 1
