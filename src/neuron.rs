@@ -60,6 +60,10 @@ impl Neuron {
     pub fn set_ext(&mut self, current: f64) {
         self.i_ext = current;
     }
+
+    pub fn get_v(&self) -> f64 {
+        self.v
+    }
 }
 
 fn sum_rec(synapses: &[(usize, f64)], spike: &[u8]) -> f64 {

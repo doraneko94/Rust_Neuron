@@ -30,4 +30,8 @@ impl Network {
             .iter_mut()
             .for_each(|neuron| neuron.set_ext(current));
     }
+
+    pub fn get_v(&self, index: usize) -> f64 {
+        self.neurons[index].get_v()
+    }
 }
