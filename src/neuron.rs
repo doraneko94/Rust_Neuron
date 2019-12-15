@@ -39,14 +39,14 @@ impl Neuron {
             }
             1
         } else {
-            let dist = Uniform::new(0.0, 1.0);
             let i_rec = self
                 .synapses
                 .iter()
                 .filter(|(i, _)| spike[*i] == 1)
                 .map(|(_, w)| w)
                 .sum::<f64>();
-            let i_ext = self.i_ext * (1.0 + self.i_ext * dist.sample(&mut rand::thread_rng()));
+            let rand = Uniform::new(0.0, 1.0).sample(&mut rand::thread_rng());
+            let i_ext = self.i_ext * (1.0 + self.i_ext * rand);
             let d_v = |y: f64| (-y + 1.0 * (i_rec + i_ext)) / 50.0;
             self.v += rk4(d_v, self.v, dt);
             if self.v > self.threshold {
