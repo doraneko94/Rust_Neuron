@@ -29,7 +29,8 @@ fn run(
     t2: f64,
 ) {
     let step = ((end - start) / dt) as usize;
-    for s in 0..=step {
+    voltage.push(network.get_v(0));
+    for s in 0..step {
         let t = start + (s as f64) * dt;
         if t1 <= t && t <= t2 {
             network.input(5.0);
