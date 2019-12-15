@@ -1,4 +1,5 @@
 use crate::neuron::Neuron;
+use rayon::prelude::*;
 
 pub struct Network {
     neurons: Vec<Neuron>,
@@ -14,7 +15,6 @@ impl Network {
     }
 
     pub fn run(&mut self, spike_train: &[Vec<u8>], dt: f64) -> Vec<u8> {
-        use rayon::prelude::*;
         let old_spike = &spike_train[self.count];
         self.count += 1;
         // rayon は作業の割当を work stealing で行うため
@@ -27,7 +27,7 @@ impl Network {
 
     pub fn input(&mut self, current: f64) {
         self.neurons
-            .iter_mut()
+            .par_iter_mut()
             .for_each(|neuron| neuron.set_ext(current));
     }
 
