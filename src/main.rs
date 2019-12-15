@@ -5,21 +5,26 @@ use gnuplot::*;
 use network::Network;
 use rand::distributions::{Bernoulli, Distribution};
 
+fn init_spike(n: usize) -> Vec<u8> {
+    let dist = Bernoulli::new(0.5).unwrap();
+    (0..n)
+        .map(|_| {
+            if dist.sample(&mut rand::thread_rng()) {
+                1
+            } else {
+                0
+            }
+        })
+        .collect()
+}
+
 fn main() {
     const N: usize = 100;
     const START_TIME: f64 = 0.;
     const END_TIME: f64 = 4000.; //800.
     const T1: f64 = 1000.; // 200.
     const T2: f64 = 3000.; // 600.
-    let mut spike_train: Vec<Vec<u8>> = vec![Vec::new()];
-    let dist = Bernoulli::new(0.5).unwrap();
-    for _ in 0..N {
-        spike_train[0].push(if dist.sample(&mut rand::thread_rng()) {
-            1
-        } else {
-            0
-        });
-    }
+    let mut spike_train: Vec<Vec<u8>> = vec![init_spike(N)];
     let mut network: Network = Network::new(N);
     let dt = 0.1;
     let step = ((END_TIME - START_TIME) / dt) as usize;
