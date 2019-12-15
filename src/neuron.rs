@@ -1,8 +1,7 @@
 use rand::distributions::{Bernoulli, Distribution, Uniform};
 
 pub struct Neuron {
-    synapses: Vec<usize>,
-    weights: Vec<f64>,
+    synapses: Vec<(usize, f64)>,
     v: f64,
     i_ext: f64,
     threshold: f64,
@@ -11,19 +10,16 @@ pub struct Neuron {
 
 impl Neuron {
     pub fn new(n: usize) -> Neuron {
-        let mut synapses: Vec<usize> = Vec::new();
-        let mut weights: Vec<f64> = Vec::new();
+        let mut synapses: Vec<(usize, f64)> = Vec::new();
         let bd = Bernoulli::new(0.5).unwrap();
         let ud = Uniform::new(0.0, 10.0);
         for i in 0..n {
             if bd.sample(&mut rand::thread_rng()) {
-                synapses.push(i);
-                weights.push(ud.sample(&mut rand::thread_rng()));
+                synapses.push((i, ud.sample(&mut rand::thread_rng())));
             }
         }
         Neuron {
             synapses,
-            weights,
             v: 0.0,
             i_ext: 0.0,
             threshold: 10.0,
@@ -41,9 +37,9 @@ impl Neuron {
         } else {
             let dist = Uniform::new(0.0, 1.0);
             let mut i_rec = 0.0;
-            for (i, synapse) in self.synapses.iter().enumerate() {
-                if spike[*synapse] == 1 {
-                    i_rec += self.weights[i];
+            for synapse in self.synapses.iter() {
+                if spike[synapse.0] == 1 {
+                    i_rec += synapse.1;
                 }
             }
             let i_ext = self.i_ext * (1.0 + self.i_ext * dist.sample(&mut rand::thread_rng()));
