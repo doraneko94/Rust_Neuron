@@ -1,7 +1,6 @@
 use crate::neuron::Neuron;
 
 pub struct Network {
-    n: usize,
     neurons: Vec<Neuron>,
     count: usize,
 }
@@ -12,11 +11,7 @@ impl Network {
         for _ in 0..n {
             neurons.push(Neuron::new(n));
         }
-        Network {
-            n,
-            neurons,
-            count: 0,
-        }
+        Network { neurons, count: 0 }
     }
 
     pub fn run(&mut self, spike_train: &[Vec<u8>], dt: f64) -> Vec<u8> {
@@ -30,8 +25,8 @@ impl Network {
     }
 
     pub fn input(&mut self, current: f64) {
-        for i in 0..self.n {
-            self.neurons[i].set_ext(current);
-        }
+        self.neurons
+            .iter_mut()
+            .for_each(|neuron| neuron.set_ext(current));
     }
 }
